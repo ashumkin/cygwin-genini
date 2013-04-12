@@ -62,7 +62,7 @@ print "setup-timestamp: $ts\n";
 print "$main::setup_version\n" if $main::setup_version;
 
 undef $main::curfile;
-for my $p (sort keys %pkg) {
+for my $p (sort {lc $a cmp lc $b} keys %pkg) {
     print "\n@ $p\n";
     for my $key ('sdesc', 'ldesc', 'category', 'requires', 'message') {
 	my $val = $pkg{$p}{''}{$key};
