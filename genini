@@ -312,9 +312,9 @@ EOF
 
 BEGIN {
     my @cats = qw'
-     Admin Archive Audio Base Comm Database Debug Devel Doc Editors Games
-     Gnome Graphics Interpreters KDE Libs Mail Math Mingw Net Perl
-     Publishing Python Science Shells Sound System Text Utils Web X11
+     Accessibility Admin Archive Audio Base Comm Database Debug Devel Doc Editors Games
+     Gnome Graphics Interpreters KDE Lib Libs Mail Math Mingw Net Perl
+     Publishing Python Ruby Science Security Shells Sound System Tcl Text Utils Video Web X11
      _obsolete _PostInstallLast
      ';
     @main::categories{map {lc $_} @cats} = @cats;
