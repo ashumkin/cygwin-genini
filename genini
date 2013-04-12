@@ -249,12 +249,20 @@ sub finddir {
 
 sub usage() {
     print STDERR <<'EOF';
-Usage: genini [--okmissing=key ...] [--output=file] [--help] [setup.ini] [dir ...]
+Usage: genini [--okmissing=key ...] [--recursive] [--output=file] [--help] [setup.ini] [dir ...]
 Create cygwin setup.ini from setup.ini, setup.hint and tar ball information.
 
     --okmissing=key    don't warn if key is missing from setup.ini or setup.hint
+                       or if some expected `source' or `install' tarballs are
+                       missing. Option may be repeated. --okmissing=install is
+                       useful if hint files contain `prev' or `test' entries for
+                       missing tarballs. --okmissing=source is useful for
+                       LOCAL-ONLY[*] srcless install media.
+    --recursive        recurse all subdirectories of specified dirs
     --output=file      output setup.ini info to file
     --help             display this message
+
+[*] You wouldn't want to violate the GPL, now would you?
 
 Report bugs to cygwin mailing list.
 EOF
