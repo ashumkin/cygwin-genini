@@ -236,7 +236,7 @@ sub finddir {
 
 sub usage() {
     print STDERR <<'EOF';
-Usage: genini [--okmissing=key ...] [--output=file] [--help] setup.ini [dir ...]
+Usage: genini [--okmissing=key ...] [--output=file] [--help] [setup.ini] [dir ...]
 Create cygwin setup.ini from setup.ini, setup.hint and tar ball information.
 
     --okmissing=key    don't warn if key is missing from setup.ini or setup.hint
