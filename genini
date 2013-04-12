@@ -84,7 +84,9 @@ sub get {
     my $key = shift;
     my $val = shift;
 
-    if (substr($val, 0, 1) eq '"') {
+    if (substr($val, 0, 1) ne '"') {
+	$val = '"'. $val . '"' if $key eq 'ldesc' || $key eq 'sdesc';
+    } else {
 	while (length($val) == 1 || $val !~ /"$/os) {
 	    $_ = <$FH>;
 	    length or last;
@@ -93,9 +95,7 @@ sub get {
 	    $val .= "\n" . $_;
 	}
     } 
-    if (($key eq 'ldesc' || $key eq 'sdesc') and $val !~ /"/o) {
-	$pkg{$pname}{$what}{$key} = '"' . $val . '"';
-    }
+    $val =~ s/(.)"(.)/$1'$2/mog;
     return $val;
 }
 
@@ -105,7 +105,7 @@ sub parse {
     my $what;
     $main::curfile = $f;
     $. = 0;
-    open(F, '<', $f) or die "$0: couldn't open $f - $!\n";
+    open(\*F, '<', $f) or die "$0: couldn't open $f - $!\n";
     while (<F>) {
 	chomp;
 	s/#.*$//o;
