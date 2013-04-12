@@ -87,7 +87,7 @@ sub get {
 	    $_ = <$FH>;
 	    length or last;
 	    chomp;
-	    s/(\S)\s+$//;
+	    s/(\S)\s+$/$1/;
 	    $val .= "\n" . $_;
 	}
     } 
