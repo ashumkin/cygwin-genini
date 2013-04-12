@@ -64,7 +64,7 @@ print "$main::setup_version\n" if $main::setup_version;
 undef $main::curfile;
 for my $p (sort {lc $a cmp lc $b} keys %pkg) {
     print "\n@ $p\n";
-    for my $key ('sdesc', 'ldesc', 'category', 'requires', 'message') {
+    for my $key ('sdesc', 'ldesc', 'category', 'requires') {
 	my $val = $pkg{$p}{''}{$key};
 	if (!defined($val) && $pkg{$p}{''}{'install'} !~ /_obsolete/o) {
 	    mywarn "package $p is missing a '$key' field"
@@ -87,7 +87,7 @@ for my $p (sort {lc $a cmp lc $b} keys %pkg) {
     for my $what ('', "[prev]\n", "[test]\n") {
 	$pkg{$p}{$what} or next;
 	print "$what";
-	for my $key ('version', 'install', 'source') {
+	for my $key ('version', 'install', 'source', 'message') {
 	    my $val = $pkg{$p}{$what}{$key} or next;
 	    print "$key: ", $val, "\n";
 	}
