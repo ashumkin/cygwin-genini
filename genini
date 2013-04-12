@@ -15,7 +15,7 @@ sub mywarn(@);
 sub myerror(@);
 sub usage();
 
-my @okmissing;
+my @okmissing = qw'message ldesc';
 my ($outfile, $help, $recursive);
 my @cmp_fmts = qw(gz bz2 lzma xz);
 
@@ -68,7 +68,7 @@ for my $p (sort keys %pkg) {
 		      unless $main::categories{lc $c};
 		}
 	    }
-	    print "$key: ", $val, "\n" if $val;
+	    print "$key: ", $val, "\n" if defined($val);
 	}
     }
     for my $what ('', "[prev]\n", "[test]\n") {
@@ -87,7 +87,8 @@ sub get {
     my $val = shift;
 
     if ($keyhint eq 'message') {
-	my ($kw, $rest) = /^(\S+)\s+(.*)$/;
+	my ($kw, $rest) = $val =~ /^([^"'\s]+)\s+(.*)$/;
+	return undef unless defined($kw) && defined($rest);
 	return $kw . ' ' . get($FH, 'ldesc', $rest);
     } elsif (substr($val, 0, 1) ne '"') {
 	$val = '"'. $val . '"' if $keyhint eq 'ldesc' || $keyhint eq 'sdesc';
@@ -134,7 +135,8 @@ sub parse {
 	    my $key = $1;
 	    my $val = $2;
 	    if ($key !~ /^(?:prev|curr|test)/) {
-		$pkg{$pname}{$what}{$key} = get(\*F, $key, $val);
+		$val = get(\*F, $key, $val);
+		$pkg{$pname}{$what}{$key} = $val;
 	    } else {
 		if ($key eq 'curr') {
 		    $key = '';
@@ -143,7 +145,7 @@ sub parse {
 		}
 		$pkg{$pname}{$key}{'version'} = $val;
 	    }
-	    next;
+	    next if defined $val;
 	};
 	/^\[[^\]]+\]/ and do {
 	    $what = $_ . "\n";
