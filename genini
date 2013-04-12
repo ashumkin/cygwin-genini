@@ -55,7 +55,7 @@ for my $p (sort keys %pkg) {
 	} else {
 	    if ($key eq 'requires') {
 		for my $p1 (split(' ', $val)) {
-		    mywarn "package $p requires on unknown package '$p1'"
+		    mywarn "package $p requires an unknown package '$p1'"
 		      unless $pkg{$p};
 		}
 	    } elsif ($key eq 'category') {
@@ -64,7 +64,7 @@ for my $p (sort keys %pkg) {
 		      unless $main::categories{lc $c};
 		}
 	    }
-	    print "$key: ", $val, "\n";
+	    print "$key: ", $val, "\n" if $val;
 	}
     }
     for my $what ('', "[prev]\n", "[test]\n") {
@@ -259,8 +259,8 @@ EOF
 BEGIN {
     my @cats = qw'
      Admin Archive Audio Base Comm Database Devel Doc Editors Games
-     Gnome Graphics Interpreters Libs Mail Math Mingw Net Publishing
-     Science Shells Sound System Text Utils Web X11
+     Gnome Graphics Interpreters KDE Libs Mail Math Mingw Net Perl
+     Publishing Python Science Shells Sound System Text Utils Web X11
      _obsolete _PostInstallLast
      ';
     @main::categories{map {lc $_} @cats} = @cats;
