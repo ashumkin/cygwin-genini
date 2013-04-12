@@ -9,6 +9,8 @@ use File::Basename;
 use Digest::MD5;
 use Getopt::Long;
 
+use strict;
+
 sub mywarn(@);
 sub myerror(@);
 sub usage();
@@ -24,7 +26,7 @@ if (defined($outfile)) {
     open(STDOUT, '>', $outfile) or die "$0: can't open $outfile - $!\n";
 }
 
-local %pkg;
+my %pkg;
 
 for my $f (@ARGV) {
     if (-d $f) {
@@ -91,6 +93,9 @@ sub get {
 	    $val .= "\n" . $_;
 	}
     } 
+    if (($key eq 'ldesc' || $key eq 'sdesc') and $val !~ /"/o) {
+	$pkg{$pname}{$what}{$key} = '"' . $val . '"';
+    }
     return $val;
 }
 
@@ -124,7 +129,7 @@ sub parse {
 	    my $key = $1;
 	    my $val = $2;
 	    if ($key !~ /^(?:prev|curr|test)/) {
-		$pkg{$pname}{$what}{$key} = get(F, $key, $val);
+		$pkg{$pname}{$what}{$key} = get(\*F, $key, $val);
 	    } else {
 		if ($key eq 'curr') {
 		    $key = '';
