@@ -17,6 +17,8 @@ sub usage();
 
 my @okmissing;
 my ($outfile, $help, $recursive);
+my @cmp_fmts = qw(gz bz2 lzma xz);
+
 GetOptions('okmissing=s'=>\@okmissing, 'output=s'=>\$outfile, 'help'=>\$help, 'recursive'=>\$recursive) or usage;
 $help and usage;
 
@@ -173,7 +175,9 @@ sub parsedir {
     }
 
     return if $explicit;
-    my @files = sort grep{!/-src\.tar.bz2/} glob("$d/*.tar.bz2");
+    my $cmp_fmts_grep = join('|', @cmp_fmts);
+    my $cmp_fmts_glob = join(',', @cmp_fmts);
+    my @files = sort grep{!/-src\.tar\.($cmp_fmts_grep)/} glob("$d/*.tar.{$cmp_fmts_glob}");
     if (!@files) {
 	myerror "not enough package files in $d";
 	return;
@@ -192,8 +196,7 @@ sub addfiles {
     my $pname = shift;
     my $x = shift;
     my $d = shift;
-
-    my $install = "$d/" . tarball($pname, $x->{'version'});
+    my $install = tarball($d, $pname, $x->{'version'});
     filer($x, 'install', $install);
 
     if ($pkg{$pname}{''}{'external-source'}) {
@@ -201,7 +204,7 @@ sub addfiles {
 	$d = finddir($d, $pname) or return;
     }
 
-    my $source  = "$d/" . tarball($pname, $x->{'version'}, 'src');
+    my $source  = tarball($d, $pname, $x->{'version'}, 'src');
     filer($x, 'source', $source);
 }
 
@@ -225,7 +228,16 @@ sub filer {
 }
 
 sub tarball {
-    return join('-', @_) . '.tar.bz2';
+    my $d = shift;
+    my $b = join('-', @_) . '.tar.';
+    for my $e (@cmp_fmts) {
+      my $f = "$d/" . "$b" . "$e";
+      if (-e "$f") {
+        return "$f";
+      }
+    }
+    # default to .bz2 (even though we know it is missing)
+    return "$d/" . "$b" . "bz2";
 }
 
 sub fnln {
