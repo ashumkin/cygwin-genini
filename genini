@@ -67,7 +67,7 @@ for my $p (sort {lc $a cmp lc $b} keys %pkg) {
     for my $key ('sdesc', 'ldesc', 'category', 'requires', 'message') {
 	my $val = $pkg{$p}{''}{$key};
 	if (!defined($val) && $pkg{$p}{''}{'install'} !~ /_obsolete/o) {
-	    mywarn "package $p is missing a $key field"
+	    mywarn "package $p is missing a '$key' field"
 	      unless defined $main::okmissing{$key};
 	} else {
 	    if ($key eq 'requires') {
