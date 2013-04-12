@@ -127,8 +127,8 @@ sub parse {
     open(\*F, '<', $f) or die "$0: couldn't open $f - $!\n";
     while (<F>) {
 	chomp;
-	s/#.*$//o;
 	s/^\s+//o;
+	s/^#.*$//o;
 	s/(\S)\s+$/$1/o;
 	length or next;
 	/^setup-timestamp:/ and do {
