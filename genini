@@ -68,7 +68,7 @@ for my $p (sort keys %pkg) {
 		      unless $main::categories{lc $c};
 		}
 	    }
-	    print "$key: ", $val, "\n" if defined($val);
+	    print "$key: ", $val, "\n" if defined($val) and $val ne "";
 	}
     }
     for my $what ('', "[prev]\n", "[test]\n") {
