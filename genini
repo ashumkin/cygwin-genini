@@ -45,7 +45,8 @@ print <<'EOF';
 #
 EOF
 
-print "$main::setup_timestamp\n" if $main::setup_timestamp;
+my $ts = time();
+print "setup-timestamp: $ts\n";
 print "$main::setup_version\n" if $main::setup_version;
 
 undef $main::curfile;
