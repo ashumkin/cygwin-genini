@@ -139,6 +139,15 @@ sub parse {
 	    $main::setup_version = $_;
 	    next;
 	};
+	/^arch:/ and do {
+	    next;
+	};
+	/^release:/ and do {
+	    next;
+	};
+	/^skip:/ and do {
+	    next;
+	};
 	/^\@\s+(\S+)/ and do {
 	    $pname = $1;
 	    $what = '';
