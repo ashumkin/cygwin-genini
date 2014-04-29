@@ -14,15 +14,25 @@ use strict;
 sub mywarn(@);
 sub myerror(@);
 sub usage();
+sub arch_handler(@);
 
 my @okmissing = qw'message ldesc';
 my ($outfile, $help, $recursive);
+my $arch = 'x86';
+my $release;
 my @cmp_fmts = qw(gz bz2 lzma xz);
 
-GetOptions('okmissing=s'=>\@okmissing, 'output=s'=>\$outfile, 'help'=>\$help, 'recursive'=>\$recursive) or usage;
+GetOptions('okmissing=s'=>\@okmissing, 'output=s'=>\$outfile, 'help'=>\$help, 'release=s'=>\$release, 'arch=s'=>\&arch_handler, 'recursive'=>\$recursive) or usage;
 $help and usage;
 
 @main::okmissing{@okmissing} = @okmissing;
+
+sub arch_handler (@) {
+   my ($opt_name, $opt_value) = @_;
+   die "invalid arch specified: '$opt_value'"
+      unless $main::valid_arch{lc $opt_value};
+   $arch = $opt_value;
+}
 
 if (defined($outfile)) {
     open(STDOUT, '>', $outfile) or die "$0: can't open $outfile - $!\n";
@@ -46,6 +56,8 @@ print <<'EOF';
 EOF
 
 my $ts = time();
+print "release: $release\n" if $release;
+print "arch: $arch\n";
 print "setup-timestamp: $ts\n";
 print "$main::setup_version\n" if $main::setup_version;
 
@@ -277,6 +289,8 @@ Create cygwin setup.ini from setup.ini, setup.hint and tar ball information.
                        missing tarballs. --okmissing=source is useful for
                        LOCAL-ONLY[*] srcless install media.
     --recursive        recurse all subdirectories of specified dirs
+    --arch=x86|x86_64  Must be either x86 or x86_64. Defaults to x86.
+    --release=string   Optional repository id: cygwin, cygwinports, etc.
     --output=file      output setup.ini info to file
     --help             display this message
 
@@ -289,10 +303,13 @@ EOF
 
 BEGIN {
     my @cats = qw'
-     Admin Archive Audio Base Comm Database Devel Doc Editors Games
+     Admin Archive Audio Base Comm Database Debug Devel Doc Editors Games
      Gnome Graphics Interpreters KDE Libs Mail Math Mingw Net Perl
      Publishing Python Science Shells Sound System Text Utils Web X11
      _obsolete _PostInstallLast
      ';
     @main::categories{map {lc $_} @cats} = @cats;
+
+    my @archs = qw'x86 x86_64';
+    @main::valid_arch{map {lc $_} @archs} = @archs;
 }
