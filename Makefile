@@ -4,6 +4,7 @@ release = release
 SETUP_INI = setup.ini
 SETUP_BZ2 = setup.bz2
 setupini=
+KEY?=29E42696
 
 all : run bzip sign
 
@@ -18,5 +19,5 @@ bzip :
 
 sign :
 	rm --force ${SETUP_INI}.sig ${SETUP_BZ2}.sig 2>/dev/null
-	gpg --detach-sign --default-key 29E42696 ${SETUP_INI}
-	gpg --detach-sign --default-key 29E42696 ${SETUP_BZ2}
+	gpg --detach-sign --default-key ${KEY} ${SETUP_INI}
+	gpg --detach-sign --default-key ${KEY} ${SETUP_BZ2}
